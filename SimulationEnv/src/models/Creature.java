@@ -21,7 +21,7 @@ public class Creature {
     	this.segments = new ArrayList<Segment>();
         this.addedNodes = new HashSet<>();
     	
-    	Node nodeA = new Node(Color.RED, 100, 800);
+    	/*Node nodeA = new Node(Color.RED, 100, 800);
     	Node nodeB = new Node(Color.BLUE, 200, 600);
     	Node nodeC = new Node(Color.GREEN, 300, 800);
     	Node nodeD = new Node(Color.BLUEVIOLET, 200, 500);
@@ -42,12 +42,16 @@ public class Creature {
     	//Segment seg7 = new Segment(nodeB,nodeend);
 
     	this.segments.add(seg);
-    	this.segments.add(seg2);
+    	this.segments.add(seg2);*/
     	//this.segments.add(seg4);
     	//this.segments.add(seg5);
     	//this.segments.add(seg3);
     	//this.segments.add(seg6);
     	//this.segments.add(seg7);
+    }
+    
+    public void ajouterSegment(Segment segment) {
+    	this.segments.add(segment);
     }
     
     public void ajouterAction() {

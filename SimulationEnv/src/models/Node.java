@@ -50,7 +50,7 @@ public class Node {
                   (int) Math.round(Math.random() * SimulationCreature.HEIGHT));
     }
 	public Node() {
-		this(Color.BLUE, 0,0);
+		this(Color.BLUE);
 	}
 	
 	void addSegment(Segment segment) {
@@ -183,8 +183,8 @@ public class Node {
 	    	if(angleDegrees>=this.angleValue)
 	    	{
 
-		        this.applyForce(moyenneForceX*2, -moyenneForceY*2);
-		        this.applyForce(-moyenneForceX*2, -moyenneForceY*2);
+		        this.applyForce(moyenneForceX, -moyenneForceY);
+		        this.applyForce(-moyenneForceX, -moyenneForceY);
 		        nodeRight.applyForce(-moyenneForceX, moyenneForceY);
 		        nodeLeft.applyForce(moyenneForceX, moyenneForceY);
 		        //this.applyForce(0, -(Math.abs(forceXLeft)+Math.abs(forceXRight)));
