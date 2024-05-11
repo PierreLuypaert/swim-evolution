@@ -183,8 +183,8 @@ public class Node {
 	    	if(angleDegrees>=this.angleValue)
 	    	{
 
-		        this.applyForce(moyenneForceX, -moyenneForceY);
-		        this.applyForce(-moyenneForceX, -moyenneForceY);
+		        this.applyForce(moyenneForceX*2, -moyenneForceY*2);
+		        this.applyForce(-moyenneForceX*2, -moyenneForceY*2);
 		        nodeRight.applyForce(-moyenneForceX, moyenneForceY);
 		        nodeLeft.applyForce(moyenneForceX, moyenneForceY);
 		        //this.applyForce(0, -(Math.abs(forceXLeft)+Math.abs(forceXRight)));
