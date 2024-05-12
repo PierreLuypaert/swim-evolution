@@ -7,7 +7,7 @@ import utils.Utils;
 
 
 public class InternalClock {
-    private static final int TIME_CLOCK_CYCLE = 60;
+    private static final int TIME_CLOCK_CYCLE = 120;
     public static final double CLOCK_INCREMENT = 0.2;
     private double currentTime = 0;
     private int nextIndexExecution=0;

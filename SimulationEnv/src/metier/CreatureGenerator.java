@@ -21,40 +21,42 @@ public class CreatureGenerator {
 		for(int i=0; i<SimulationCreature.CREATURE_PER_ROUND/2;i++)
 		{
 			Creature creature = new Creature();
-	        int numNodes = (int) (Math.random() * (SimulationCreature.MAX_NODES - SimulationCreature.MIN_NODES + 1)) + SimulationCreature.MIN_NODES;
-			Node[] nodes = new Node[numNodes];
-			for(int j=0; j < nodes.length; j++) {
-				if (j>0)
-				{
-					//int randomX = (int) ((int) (Math.random() * (SimulationCreature.WIDTH - nodes[j-1].getX() + 1)) + nodes[j-1].getX());
-					//int randomY = (int) ((int) (Math.random() * (SimulationCreature.HEIGHT - 0 + 1)) );
-					nodes[j] = new Node(Color.GREEN);
-					creature.ajouterSegment(new Segment(nodes[j-1], nodes[j]));
+			if( !SimulationCreature.DEBUG_CREATURES)
+			{
+		        int numNodes = (int) (Math.random() * (SimulationCreature.MAX_NODES - SimulationCreature.MIN_NODES + 1)) + SimulationCreature.MIN_NODES;
+				Node[] nodes = new Node[numNodes];
+				for(int j=0; j < nodes.length; j++) {
+					if (j>0)
+					{
+						//int randomX = (int) ((int) (Math.random() * (SimulationCreature.WIDTH - nodes[j-1].getX() + 1)) + nodes[j-1].getX());
+						//int randomY = (int) ((int) (Math.random() * (SimulationCreature.HEIGHT - 0 + 1)) );
+						nodes[j] = new Node(Color.GREEN);
+						creature.ajouterSegment(new Segment(nodes[j-1], nodes[j]));
+					}
+					else
+						nodes[j] = new Node(Color.RED);
+					
 				}
-				else
-					nodes[j] = new Node(Color.RED);
-				
-			}
 
 			
-			// le min de segment est égal au num de node-1
-			// GENERATION ALEATOIRE DE SEGMENTS
-			/*int numSegment =  0;
-			while(numSegment!=0) {
-				int leftNodeIndex = (int) (Math.random() * numNodes);
-			    int rightNodeIndex = (int) (Math.random() * numNodes);
-			    
-			    Node nodeLeft = nodes[leftNodeIndex];
-			    Node nodeRight = nodes[rightNodeIndex];
-			    
-			    // Vérifier que les nœuds sélectionnés sont différents
-			    if (nodeLeft.getId() != nodeRight.getId()) {
-			        Segment segment = new Segment(nodeLeft, nodeRight);
-			        if (creature.ajouterSegment(segment))
-			        	numSegment--;
-			    } 
-			}*/
-			
+				// le min de segment est égal au num de node-1
+				// GENERATION ALEATOIRE DE SEGMENTS
+				/*int numSegment =  0;
+				while(numSegment!=0) {
+					int leftNodeIndex = (int) (Math.random() * numNodes);
+				    int rightNodeIndex = (int) (Math.random() * numNodes);
+				    
+				    Node nodeLeft = nodes[leftNodeIndex];
+				    Node nodeRight = nodes[rightNodeIndex];
+				    
+				    // Vérifier que les nœuds sélectionnés sont différents
+				    if (nodeLeft.getId() != nodeRight.getId()) {
+				        Segment segment = new Segment(nodeLeft, nodeRight);
+				        if (creature.ajouterSegment(segment))
+				        	numSegment--;
+				    } 
+				}*/
+			}
 			
 			this.creatures.add(creature);
 		}

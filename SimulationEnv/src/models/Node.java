@@ -62,11 +62,15 @@ public class Node {
 		}
 	}*/
 	
-	void ajouterAction(int indexMuscle, ActionType action) {
+	void ajouterActionToMuscle(int indexMuscle, ActionType action) {
 		Muscle muscle;
 		if (indexMuscle >= this.muscles.size())
 		{
-			muscle = new Muscle(this, this.segments.get(0).getNodeLeft(),this.segments.get(1).getNodeRight(), null);
+			if(indexMuscle==0)
+				muscle = new Muscle(this, this.segments.get(0).getNodeLeft(),this.segments.get(1).getNodeRight(), null);	
+			else
+				muscle = new Muscle(this, this.segments.get(1).getNodeRight(),this.segments.get(2).getNodeRight(), null);	
+
 			this.muscles.add(muscle);
 		}
 		else

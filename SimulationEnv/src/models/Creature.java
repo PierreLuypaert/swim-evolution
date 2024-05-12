@@ -20,34 +20,38 @@ public class Creature {
     public Creature() {
     	this.segments = new ArrayList<Segment>();
         this.addedNodes = new HashSet<>();
+        
+        if(SimulationCreature.DEBUG_CREATURES)
+        {
     	
-    	/*Node nodeA = new Node(Color.RED, 100, 800);
-    	Node nodeB = new Node(Color.BLUE, 200, 600);
-    	Node nodeC = new Node(Color.GREEN, 300, 800);
-    	Node nodeD = new Node(Color.BLUEVIOLET, 200, 500);
-    	
-
-    	Node nodeE = new Node(Color.WHITE, 100, 700);
-    	Node nodeF = new Node(Color.CHOCOLATE, 300, 700);
-    	Node nodeG = new Node(Color.BLACK, 200, 400);
-    	Node nodeend = new Node(Color.BEIGE, 200, 900);
-    	
-
-    	Segment seg = new Segment(nodeA,nodeB);
-    	Segment seg2 = new Segment(nodeB,nodeC);
-    	Segment seg4 = new Segment(nodeE,nodeD);
-    	Segment seg5 = new Segment(nodeD,nodeF);
-    	Segment seg3 = new Segment(nodeB,nodeD);
-    	//Segment seg6 = new Segment(nodeD,nodeG);
-    	//Segment seg7 = new Segment(nodeB,nodeend);
-
-    	this.segments.add(seg);
-    	this.segments.add(seg2);*/
-    	//this.segments.add(seg4);
-    	//this.segments.add(seg5);
-    	//this.segments.add(seg3);
-    	//this.segments.add(seg6);
-    	//this.segments.add(seg7);
+	    	Node nodeA = new Node(Color.RED, 100, 800);
+	    	Node nodeB = new Node(Color.BLUE, 200, 600);
+	    	Node nodeC = new Node(Color.GREEN, 300, 800);
+	    	Node nodeD = new Node(Color.BLUEVIOLET, 200, 500);
+	    	
+	
+	    	Node nodeE = new Node(Color.WHITE, 200, 900);
+	    	/*Node nodeF = new Node(Color.CHOCOLATE, 300, 700);
+	    	Node nodeG = new Node(Color.BLACK, 200, 400);
+	    	Node nodeend = new Node(Color.BEIGE, 200, 900);*/
+	    	
+	
+	    	Segment seg = new Segment(nodeA,nodeB);
+	    	Segment seg2 = new Segment(nodeB,nodeC);
+	    	Segment seg3 = new Segment(nodeB,nodeD);
+	    	Segment seg4 = new Segment(nodeD,nodeE);
+	    	/*Segment seg5 = new Segment(nodeD,nodeF);
+	    	//Segment seg6 = new Segment(nodeD,nodeG);
+	    	//Segment seg7 = new Segment(nodeB,nodeend);*/
+	
+	    	this.segments.add(seg);
+	    	this.segments.add(seg2);
+	    	this.segments.add(seg3);
+	    	//this.segments.add(seg4);
+	    	//this.segments.add(seg5);
+	    	//this.segments.add(seg6);
+	    	//this.segments.add(seg7);
+        }
     }
     
     public boolean ajouterSegment(Segment segment) {
@@ -66,19 +70,24 @@ public class Creature {
             
             // Vérifier si le nœud gauche a exactement deux voisins
             if (leftNode.getNeighboorCount() >= 2) {
-                leftNode.ajouterAction(0, new ActionType(0, 140));
-                leftNode.ajouterAction(0, new ActionType(30, 10));
+                leftNode.ajouterActionToMuscle(0, new ActionType(0, 140));
+                leftNode.ajouterActionToMuscle(0, new ActionType(30, 10));
+                if(leftNode.getNeighboorCount()>=3)
+                {
+                    leftNode.ajouterActionToMuscle(1, new ActionType(60, 140));
+                    leftNode.ajouterActionToMuscle(1, new ActionType(90,10));
+                }
             	return;
             } else if (rightNode.getNeighboorCount() >= 2) {
-                rightNode.ajouterAction(0, new ActionType(0, 140));
-                rightNode.ajouterAction(0, new ActionType(30, 10));  
+                rightNode.ajouterActionToMuscle(0, new ActionType(0, 140));
+                rightNode.ajouterActionToMuscle(0, new ActionType(30, 10));  
+                if(rightNode.getNeighboorCount()>=3)
+                {
+                	rightNode.ajouterActionToMuscle(1, new ActionType(60, 140));
+                	rightNode.ajouterActionToMuscle(1, new ActionType(90,10));
+                }
                 return;
             }
-    
-            
-            
-            // Vérifier si le nœud droit a exactement deux voisins
-            /*}*/
         }
     }
 
