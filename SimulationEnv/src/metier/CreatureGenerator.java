@@ -23,7 +23,7 @@ public class CreatureGenerator {
 			Creature creature = new Creature();
 			if( !SimulationCreature.DEBUG_CREATURES)
 			{
-		        int numNodes = (int) (Math.random() * (SimulationCreature.MAX_NODES - SimulationCreature.MIN_NODES + 1)) + SimulationCreature.MIN_NODES;
+		        int numNodes =  SimulationCreature.MIN_NODES;/*(int) (Math.random() * (SimulationCreature.MAX_NODES - SimulationCreature.MIN_NODES + 1)) + SimulationCreature.MIN_NODES;*/
 				Node[] nodes = new Node[numNodes];
 				for(int j=0; j < nodes.length; j++) {
 					if (j>0)
@@ -37,6 +37,9 @@ public class CreatureGenerator {
 						nodes[j] = new Node(Color.RED);
 					
 				}
+				
+				//on a numNodes
+				
 
 			
 				// le min de segment est égal au num de node-1

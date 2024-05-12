@@ -3,12 +3,11 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
+import enviro.SimulationCreature;
 import utils.Utils;
 
 
 public class InternalClock {
-    private static final int TIME_CLOCK_CYCLE = 120;
-    public static final double CLOCK_INCREMENT = 0.2;
     private double currentTime = 0;
     private int nextIndexExecution=0;
 	private List<ActionType> actions;
@@ -34,15 +33,15 @@ public class InternalClock {
 			}
 			
 			
-			this.currentTime += InternalClock.CLOCK_INCREMENT;
-			if (this.currentTime >= InternalClock.TIME_CLOCK_CYCLE)
+			this.currentTime += SimulationCreature.CLOCK_INCREMENT;
+			if (this.currentTime >= SimulationCreature.TIME_CLOCK_CYCLE)
 				this.currentTime=0;
 		}
 	}
 	
 	private void updateActions() {
-		if ( this.muscle.getActionsCount() != this.actions.size())
-			this.actions = this.muscle.getActions();
+		//if ( this.muscle.getActionsCount() != this.actions.size())
+		this.actions = this.muscle.getActions();
 	}
 	
 }

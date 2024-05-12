@@ -11,7 +11,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
-public class Creature {
+public class Creature implements Cloneable {
 
     //private List<Node> nodes;
     private List<Segment> segments;
@@ -20,7 +20,6 @@ public class Creature {
     public Creature() {
     	this.segments = new ArrayList<Segment>();
         this.addedNodes = new HashSet<>();
-        
         if(SimulationCreature.DEBUG_CREATURES)
         {
     	
@@ -46,13 +45,23 @@ public class Creature {
 	
 	    	this.segments.add(seg);
 	    	this.segments.add(seg2);
-	    	this.segments.add(seg3);
+	    	//this.segments.add(seg3);
 	    	//this.segments.add(seg4);
 	    	//this.segments.add(seg5);
 	    	//this.segments.add(seg6);
 	    	//this.segments.add(seg7);
         }
     }
+    
+    public Creature(Creature other) {
+    	this.segments = other.segments;
+        this.addedNodes = new HashSet<>();
+    }
+    
+    public Object clone() throws CloneNotSupportedException 
+    { 
+        return super.clone(); 
+    } 
     
     public boolean ajouterSegment(Segment segment) {
     	if(!this.segments.contains(segment))
@@ -68,7 +77,7 @@ public class Creature {
             Node leftNode = segment.getNodeLeft();
             Node rightNode = segment.getNodeRight();
             
-            // Vérifier si le nœud gauche a exactement deux voisins
+            // Vérifier si le nœud gauche a deux voisins
             if (leftNode.getNeighboorCount() >= 2) {
                 leftNode.ajouterActionToMuscle(0, new ActionType(0, 140));
                 leftNode.ajouterActionToMuscle(0, new ActionType(30, 10));
@@ -90,9 +99,117 @@ public class Creature {
             }
         }
     }
+    
+    public void mutation() {
+        // LES MUTATIONS DOIVENT SE FAIRE SUR DES OBJETS COPIES AVANT LE LANCEMENT DU JEU
+        // mutations possibles :
+        // changement de la position d'un noeud
+        // changement de la vitesse d'horloge
+        // ajout ou suppression d'un ou plusieurs membres, mais plus rare
+        // ajout d'un muscle
+
+        boolean performed = false;
+        while (!performed) {
+            int probability = (int) (Math.random() * (100 - 1));
+            if(addedNodes==null || addedNodes.isEmpty())
+            {
+            	for (Segment seg : this.segments) {
+                    Node nodeLeft = seg.getNodeLeft();
+                    Node nodeRight = seg.getNodeRight();
+
+                    // Vérifier si le nœud gauche a déjà été ajouté
+                    if (!addedNodes.contains(nodeLeft)) {
+                        addedNodes.add(nodeLeft);
+                    }
+
+                    // Vérifier si le nœud droit a déjà été ajouté
+                    if (!addedNodes.contains(nodeRight)) {
+                        addedNodes.add(nodeRight);
+                    }
+                }
+            }
+            int indexRandom = (int) (Math.random() * addedNodes.size()); // Génère un index aléatoire
+            Node[] nodesArray = addedNodes.toArray(new Node[0]); // Convertit HashSet en tableau
+            Node randomNode = nodesArray[indexRandom];
+            if (probability >= 0 && probability < 25) {
+                // CHANGEMENT DE POSITION D'UN NOEUD;
+                randomNode.setX(randomNode.getX() + Math.random() * 200 - 100);
+                randomNode.setY(randomNode.getY() + Math.random() * 200 - 100);
+                performed = true;
+                System.out.println("Changement de position d'un nœud effectué.");
+            } else if (probability >= 25 && probability < 55) {
+                // CHANGEMENT DE TIMING OU D'ANGLE D'UN MUSCLE;
+                Muscle randomMuscle = randomNode.getRandomMuscle();
+                if (randomMuscle != null) {
+                    ActionType action = randomMuscle.getRandomActionType();
+                    if (probability % 2 == 0) {
+                        // changement de la timestamp de l'action
+                        int addedClockInterval = (int) ((int) (Math.random() * (61 - 30)) * SimulationCreature.CLOCK_INCREMENT);
+                        if (action.getTime() + addedClockInterval >= 0 && action.getTime() + addedClockInterval <= SimulationCreature.TIME_CLOCK_CYCLE - 10) {
+                            performed = true;
+                            System.out.println("Changement de timing d'un muscle effectué (" + action.getTime() + " -> " +(int)(action.getTime()+addedClockInterval) + ").");
+                            action.setTime(action.getTime() + addedClockInterval);
+                        }
+                    } else {
+                        // changement de l'angle de l'action
+                        int addedAngle = (int) ((int) (Math.random() * (61 - 30)));
+                        if (action.getAngleValue() + addedAngle >= 10 && action.getAngleValue() + addedAngle <= 170) {
+                            performed = true;
+                            System.out.println("Changement d'angle d'un muscle effectué (" + action.getAngleValue() + " -> "+ (int)(action.getAngleValue()+addedAngle) + ").");
+                            action.setAngleValue(action.getAngleValue() + addedAngle);
+                        }
+                    }
+                }
+            } else if (probability >= 55 && probability < 70) {
+                // AJOUT D'UN MEMBRE
+                Node newNode = new Node();
+                this.segments.add(new Segment(newNode, randomNode));
+                performed = true;
+                System.out.println("Ajout d'un membre effectué.");
+            } else {
+                // AJOUT OU SUPPRESSION D'UN MUSCLE
+                if (randomNode.getNeighboorCount() >= 2) {
+                    if (probability % 3 == 0) {
+                        // suppression d'un muscle
+                        if (randomNode.deleteRandomMuscle())
+                        {
+                            performed = true;
+                            System.out.println("Suppression d'un muscle effectuée.");
+                        }
+                    } else {
+                        int actionTime1 = (int) (Math.random() * SimulationCreature.TIME_CLOCK_CYCLE);
+                        int angleValue1 = (int) (Math.random() * 170);
+                        
+                        int actionTime2 = (int) (Math.random() * SimulationCreature.TIME_CLOCK_CYCLE);
+                        int angleValue2 = (int) (Math.random() * 170);
+                        if (probability < 87) {
+                            // modification d'un muscle
+                            Muscle randomMuscle = randomNode.getRandomMuscle();
+                            if (randomMuscle != null) {
+                                randomMuscle.ajouterAction(new ActionType(actionTime1, angleValue1));
+                                performed = true;
+                                System.out.println("Modification d'un muscle effectuée. Nouveau: " + actionTime1 + ";" + angleValue1);
+                            }
+                        } else {
+                            // ajout d'un muscle
+                            if (randomNode.getNeighboorCount() >= 2 && randomNode.getNeighboorCount() != randomNode.getMuscleCount()+1) {
+                                randomNode.ajouterMuscle(new ActionType(actionTime1, angleValue1), new ActionType(actionTime2, angleValue2));
+                                performed = true;
+                                System.out.println("Ajout d'un muscle effectué.");
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
+
 
     public List<Shape> getShapes() {
         List<Shape> shapes = new ArrayList<>();
+        this.addedNodes = new HashSet<>();
         for (Segment seg : this.segments) {
             Node nodeLeft = seg.getNodeLeft();
             Node nodeRight = seg.getNodeRight();

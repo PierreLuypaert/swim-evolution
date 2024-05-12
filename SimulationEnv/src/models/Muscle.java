@@ -42,9 +42,15 @@ public class Muscle {
 	}
 	
 	public void perform() {
-		this.clock.execute();		
-		if(this.angleValue!=0)
-			this.contractionMeduse();
+		if(this.clock!=null) {
+			this.clock.execute();		
+			if(this.angleValue!=0)
+				this.contractionMeduse();
+		}
+	}
+	
+	public ActionType getRandomActionType() {
+        return this.actions.get((int) (Math.random() * this.actions.size()));
 	}
 	
 	
@@ -57,6 +63,11 @@ public class Muscle {
     	}
     	//System.out.println("Noeud " + this.id + " CONTRACTION " + this.angleValue);
     	this.angleValue = angleValue;
+    }
+    
+    void delete() {
+    	this.clock = null;
+    	this.actions = new ArrayList<ActionType>();
     }
 	
     void contractionMeduse() {

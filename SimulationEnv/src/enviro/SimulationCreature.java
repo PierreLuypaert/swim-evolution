@@ -17,6 +17,8 @@ import models.Node;
 import models.Segment;
 
 public class SimulationCreature extends Application {
+    public static final int TIME_CLOCK_CYCLE = 60;
+    public static final double CLOCK_INCREMENT = 0.1;
     public static final boolean DEBUG_CREATURES = true;
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 900;
@@ -28,14 +30,14 @@ public class SimulationCreature extends Application {
     private List<Creature> creatures;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws CloneNotSupportedException {
         Group root = new Group();
 
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.WHITE);
         scene.setFill(Color.LIGHTBLUE); 
 
         
-        primaryStage.setTitle("Creature Simulation");
+        primaryStage.setTitle("Creature Evolution Simulation");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -45,12 +47,20 @@ public class SimulationCreature extends Application {
        // Create creatures
         creatures = generator.generateCreatures();
     	
+        //creatures.add(creatureCopy);
         
-        
-        for(Creature creature: creatures) {
+        /*for(Creature creature: creatures) {
             root.getChildren().addAll(creature.getShapes());
-        }
+        }*/
+        
+        
 
+        Creature creatureCopy = creatures.get(0);
+        creatureCopy.ajouterAction();
+        creatureCopy.mutation();
+        root.getChildren().addAll(creatureCopy.getShapes());
+
+        
         //root.getChildren().add(new Line(200,0,200,900));     // Start simulation loop
         AnimationTimer timer = new AnimationTimer() {
             @Override

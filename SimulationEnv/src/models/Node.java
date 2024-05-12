@@ -71,12 +71,38 @@ public class Node {
 			else
 				muscle = new Muscle(this, this.segments.get(1).getNodeRight(),this.segments.get(2).getNodeRight(), null);	
 
+			
 			this.muscles.add(muscle);
 		}
 		else
 			muscle = this.muscles.get(indexMuscle);
 		
 		muscle.ajouterAction(action);
+	}
+	
+	void ajouterMuscle(ActionType action1, ActionType action2) {
+        int index1 = (int) (Math.random() * segments.size());
+        int index2 = index1;
+        while (index2 == index1) {
+            index2 = (int) (Math.random() * segments.size());
+        }
+        
+        Node nodeLeft = this.segments.get(index1).getNodeLeft();
+        if(nodeLeft.getId() == this.getId())
+        	nodeLeft = this.segments.get(index1).getNodeRight();
+        
+
+        
+        Node nodeRight= this.segments.get(index2).getNodeRight();
+        if(nodeRight.getId() == this.getId())
+        	nodeRight = this.segments.get(index2).getNodeLeft();
+        		
+        Muscle muscle = new Muscle(this, nodeLeft, nodeRight, null);
+        muscle.ajouterAction(action1);
+        muscle.ajouterAction(action2);
+        System.out.println("Action1 - Timestamp: " + action1.getTime() + " Angle: " + action1.getAngleValue());
+        System.out.println("Action2 - Timestamp: " + action2.getTime() + " Angle: " + action2.getAngleValue());
+        this.muscles.add(muscle);
 	}
 	
 
@@ -90,7 +116,7 @@ public class Node {
     // Méthode pour déplacer le nœud en fonction des forces appliquées
     void move() {
         // Déplacer le nœud en fonction des forces appliquées
-        double deltaTime = InternalClock.CLOCK_INCREMENT; // Pas de temps pour la simulation (à ajuster selon vos besoins)
+        double deltaTime = SimulationCreature.CLOCK_INCREMENT; // Pas de temps pour la simulation (à ajuster selon vos besoins)
         double accelerationX = forceX; // Calculer l'accélération en fonction de la force
         double accelerationY = forceY; // Calculer l'accélération en fonction de la force
         double velocityX = accelerationX * deltaTime; // Calculer la vitesse en fonction de l'accélération et du pas de temps
@@ -153,6 +179,24 @@ public class Node {
 	
 	public int getId() { 
 		return this.id;
+	}
+	
+	public Muscle getRandomMuscle() {
+		if(this.muscles.size() != 0)
+			return this.muscles.get((int) (Math.random() * muscles.size()));
+		return null;
+	}
+	
+	public int getMuscleCount() {
+		return this.muscles.size();
+	}
+	
+	public boolean deleteRandomMuscle() {
+		if(this.muscles.size() == 0) return false;
+		int muscleToRemoveIndex = (int) (Math.random() * muscles.size());
+		this.muscles.get(muscleToRemoveIndex).delete();
+        this.muscles.remove(muscleToRemoveIndex); // Supprime le muscle à l'index aléatoire
+        return true; // Indique que la suppression a réussi
 	}
 	
 	
