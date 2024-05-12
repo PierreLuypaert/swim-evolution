@@ -66,12 +66,12 @@ public class Creature {
             
             // Vérifier si le nœud gauche a exactement deux voisins
             if (leftNode.getNeighboorCount() >= 2) {
-                leftNode.ajouterAction(new ActionType(0, 140));
-                leftNode.ajouterAction(new ActionType(30, 10));
+                leftNode.ajouterAction(0, new ActionType(0, 140));
+                leftNode.ajouterAction(0, new ActionType(30, 10));
             	return;
             } else if (rightNode.getNeighboorCount() >= 2) {
-                rightNode.ajouterAction(new ActionType(0, 140));
-                rightNode.ajouterAction(new ActionType(30, 10));  
+                rightNode.ajouterAction(0, new ActionType(0, 140));
+                rightNode.ajouterAction(0, new ActionType(30, 10));  
                 return;
             }
     
@@ -169,13 +169,13 @@ public class Creature {
     	}
     }
     
-    private boolean isSegmentAlreadyExisting(Segment segment) {
+    /*private boolean isSegmentAlreadyExisting(Segment segment) {
     	for(Segment seg : this.segments) 
     	{
     		if( seg.equals(segment))
     			return true;
     	}
     	return false;
-    }
+    }*/
 
 }

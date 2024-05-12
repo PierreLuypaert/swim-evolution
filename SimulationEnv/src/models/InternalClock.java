@@ -12,20 +12,21 @@ public class InternalClock {
     private double currentTime = 0;
     private int nextIndexExecution=0;
 	private List<ActionType> actions;
-	private Node node;
+	private Muscle muscle;
 	
-	public InternalClock(Node node) {
+	public InternalClock(Muscle muscle) {
 		this.actions = new ArrayList<ActionType>();
-		this.node = node;
+		this.muscle = muscle;
 	}
 	
 	void execute() {
+		updateActions();
 		if (this.actions.size() > 0)
 		{		
 			if (Utils.compareDoubles(this.actions.get(this.nextIndexExecution).getTime(),this.currentTime,0.001))
 			{
 				//System.out.println("Envoi de l'ordre pour le noeud " + this.node.getId());
-				this.node.mouvementMeduse(this.actions.get(this.nextIndexExecution).getAngleValue());
+				this.muscle.mouvementMeduse(this.actions.get(this.nextIndexExecution).getAngleValue());
 				if(this.nextIndexExecution+1 < this.actions.size())
 					this.nextIndexExecution++;
 				else
@@ -39,9 +40,9 @@ public class InternalClock {
 		}
 	}
 	
-	void ajouterAction(ActionType action) {
-		this.actions.add(action);
+	private void updateActions() {
+		if ( this.muscle.getActionsCount() != this.actions.size())
+			this.actions = this.muscle.getActions();
 	}
-
 	
 }
