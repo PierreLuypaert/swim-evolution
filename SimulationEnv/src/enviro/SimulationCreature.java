@@ -17,9 +17,10 @@ import models.Creature;
 public class SimulationCreature extends Application {
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 900;
-    public static final int CREATURE_PER_ROUND = 2;
+    public static final int CREATURE_PER_ROUND = 10;
     public static final int MIN_NODES = 3;
-    public static final int MAX_NODES = 3;
+    public static final int MAX_NODES = 6;
+    public static final int MAX_SEGMENT = 5;
     private static final int NUM_CREATURES = 1;
     private List<Creature> creatures;
 

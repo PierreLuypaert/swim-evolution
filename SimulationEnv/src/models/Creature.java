@@ -50,15 +50,36 @@ public class Creature {
     	//this.segments.add(seg7);
     }
     
-    public void ajouterSegment(Segment segment) {
-    	this.segments.add(segment);
+    public boolean ajouterSegment(Segment segment) {
+    	if(!this.segments.contains(segment))
+    	{
+    		this.segments.add(segment);
+    		return true;
+    	}
+    	return false;
     }
     
     public void ajouterAction() {
-    	this.segments.get(0).getNodeRight().ajouterAction(new ActionType(0, 140));
-    	this.segments.get(0).getNodeRight().ajouterAction(new ActionType(30, 10));
-    	//this.segments.get(2).getNodeRight().ajouterAction(new ActionType(0, 10));
-    	//this.segments.get(2).getNodeRight().ajouterAction(new ActionType(50, 140));
+        for (Segment segment : segments) {
+            Node leftNode = segment.getNodeLeft();
+            Node rightNode = segment.getNodeRight();
+            
+            // Vérifier si le nœud gauche a exactement deux voisins
+            if (leftNode.getNeighboorCount() >= 2) {
+                leftNode.ajouterAction(new ActionType(0, 140));
+                leftNode.ajouterAction(new ActionType(30, 10));
+            	return;
+            } else if (rightNode.getNeighboorCount() >= 2) {
+                rightNode.ajouterAction(new ActionType(0, 140));
+                rightNode.ajouterAction(new ActionType(30, 10));  
+                return;
+            }
+    
+            
+            
+            // Vérifier si le nœud droit a exactement deux voisins
+            /*}*/
+        }
     }
 
     public List<Shape> getShapes() {
@@ -106,6 +127,8 @@ public class Creature {
 	    double desiredLength = 100; // Exemple de longueur souhaitée
 
     	for (Segment seg : this.segments) {
+    		
+    		//un noeud ne se fait pas attirer par son voisin si ce voisin n'a pas d'autre voisin
     	    // Longueur souhaitée du segment
 
     	    // Calculer la longueur actuelle du segment
@@ -123,16 +146,20 @@ public class Creature {
     	        // Les nœuds sont trop proches, appliquer une force extérieure
     	        double forceX = deltaX * lengthDiff * 1; // Force extérieure
     	        double forceY = deltaY * lengthDiff *  1; // Force extérieure
-	        	seg.getNodeRight().applyForce(forceX, forceY);
-	        	seg.getNodeLeft().applyForce(-forceX, -forceY);
+    	        if (seg.getNodeLeft().getNeighboorCount() != 1)
+    	        	seg.getNodeRight().applyForce(forceX, forceY);
+    	        if (seg.getNodeRight().getNeighboorCount() != 1)
+    	        	seg.getNodeLeft().applyForce(-forceX, -forceY);
 	        	
     	        	
     	    } else {
     	        // Les nœuds sont trop éloignés, appliquer une force intérieure
     	        double forceX = deltaX * lengthDiff *  1; // Force intérieure
     	        double forceY = deltaY * lengthDiff *  1; // Force intérieure
-	        	seg.getNodeLeft().applyForce(-forceX, -forceY);
-	        	seg.getNodeRight().applyForce(forceX, forceY);
+    	        if (seg.getNodeRight().getNeighboorCount() != 1)
+    	        	seg.getNodeLeft().applyForce(-forceX, -forceY);
+    	        if (seg.getNodeLeft().getNeighboorCount() != 1)
+    	        	seg.getNodeRight().applyForce(forceX, forceY);
     	    }
 
         	//this.segments.get(0).getNodeRight().applyForce(0, 15);
@@ -140,6 +167,15 @@ public class Creature {
     	    // Mettre à jour l'interface utilisateur
     	    seg.update();
     	}
+    }
+    
+    private boolean isSegmentAlreadyExisting(Segment segment) {
+    	for(Segment seg : this.segments) 
+    	{
+    		if( seg.equals(segment))
+    			return true;
+    	}
+    	return false;
     }
 
 }

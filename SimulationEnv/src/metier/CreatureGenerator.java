@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enviro.SimulationCreature;
+import javafx.scene.paint.Color;
 import models.Creature;
 import models.Node;
 import models.Segment;
@@ -23,16 +24,38 @@ public class CreatureGenerator {
 	        int numNodes = (int) (Math.random() * (SimulationCreature.MAX_NODES - SimulationCreature.MIN_NODES + 1)) + SimulationCreature.MIN_NODES;
 			Node[] nodes = new Node[numNodes];
 			for(int j=0; j < nodes.length; j++) {
-				nodes[j] = new Node();
+				if (j>0)
+				{
+					//int randomX = (int) ((int) (Math.random() * (SimulationCreature.WIDTH - nodes[j-1].getX() + 1)) + nodes[j-1].getX());
+					//int randomY = (int) ((int) (Math.random() * (SimulationCreature.HEIGHT - 0 + 1)) );
+					nodes[j] = new Node(Color.GREEN);
+					creature.ajouterSegment(new Segment(nodes[j-1], nodes[j]));
+				}
+				else
+					nodes[j] = new Node(Color.RED);
+				
 			}
+
 			
-			//faire des segments aléatoires
-			Segment[] segments = new Segment[numNodes-1];
-			for(int k=0; k < segments.length ; k++) 
-			{
-				segments[k] = new Segment(nodes[k], nodes[k+1]);
-				creature.ajouterSegment(segments[k]);
-			}
+			// le min de segment est égal au num de node-1
+			// GENERATION ALEATOIRE DE SEGMENTS
+			/*int numSegment =  0;
+			while(numSegment!=0) {
+				int leftNodeIndex = (int) (Math.random() * numNodes);
+			    int rightNodeIndex = (int) (Math.random() * numNodes);
+			    
+			    Node nodeLeft = nodes[leftNodeIndex];
+			    Node nodeRight = nodes[rightNodeIndex];
+			    
+			    // Vérifier que les nœuds sélectionnés sont différents
+			    if (nodeLeft.getId() != nodeRight.getId()) {
+			        Segment segment = new Segment(nodeLeft, nodeRight);
+			        if (creature.ajouterSegment(segment))
+			        	numSegment--;
+			    } 
+			}*/
+			
+			
 			this.creatures.add(creature);
 		}
 		return this.creatures;

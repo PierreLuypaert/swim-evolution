@@ -49,4 +49,41 @@ public class Segment {
 	}
 	
 	Shape getShape() { return this.line; }
+	
+	@Override
+	public boolean equals(Object seg) {
+	 
+	    // If the object is compared with itself then return true  
+	    if (seg == this) {
+	        return true;
+	    }
+	    
+	    // Check if the object is null or not an instance of Segment
+	    if (seg == null || getClass() != seg.getClass()) {
+	        return false;
+	    }
+	    
+	    Segment segment = (Segment) seg;
+
+	    // Check if the nodes are exactly the same
+	    boolean exactlySame = (this.getNodeLeft().getId() == segment.getNodeLeft().getId() && 
+	                           this.getNodeRight().getId() == segment.getNodeRight().getId());
+	    
+	    // Check if nodes are swapped
+	    boolean nodesSwapped = (this.getNodeLeft().getId() == segment.getNodeRight().getId() && 
+	                            this.getNodeRight().getId() == segment.getNodeLeft().getId());
+	    
+	    // Check if only the left node is swapped
+	    boolean leftNodeSwapped = (this.getNodeLeft().getId() == segment.getNodeRight().getId() && 
+	                               this.getNodeRight().getId() == segment.getNodeLeft().getId());
+	    
+	    // Check if only the right node is swapped
+	    boolean rightNodeSwapped = (this.getNodeLeft().getId() == segment.getNodeLeft().getId() && 
+	                                this.getNodeRight().getId() == segment.getNodeRight().getId());
+	    
+	    // Check if either nodes are swapped or if only one node is swapped
+	    return exactlySame || nodesSwapped || leftNodeSwapped || rightNodeSwapped;
+	}
+
+
 }

@@ -92,43 +92,27 @@ public class Node {
     }
     
     void contractionMeduse() {
+    	//REVOIR TOUS CES CALCULS POUR QUILS MARCHENT DANS NIMPORTE QUEL SENS
+    	//IL FAUT QUE CE SOIT CLAIR
+    	//commencer par calculer le point imaginaire
         if (this.angleValue == 0) return;
 
-        //long startTime = System.nanoTime();
         // Récupérer les nœuds gauche et droit
         
         Node nodeLeft = this.segments.get(0).getNodeLeft();
         Node nodeRight = this.segments.get(1).getNodeRight();
-        
-
-        // Obtenir le temps de fin
-        /*long endTime = System.nanoTime();
-
-        // Calculer le temps écoulé
-        long elapsedTime = endTime - startTime;
-
-        // Afficher le temps écoulé
-        System.out.println("Temps écoulé : " + elapsedTime + " millisecondes");*/
-
         // Calculer les coordonnées du point moyen entre nodeLeft et nodeRight
         double midX = (nodeLeft.getX() + nodeRight.getX()) / 2.0;
         double midY = (nodeLeft.getY() + nodeRight.getY()) / 2.0;
-
-        // Calculer les coordonnées du vecteur perpendiculaire
-        double vecX = nodeRight.getX() - nodeLeft.getX();
-        double vecY = nodeRight.getY() - nodeLeft.getY();
-        double perpVecX = -vecY;
-        double perpVecY = vecX;
-
-        // Normaliser le vecteur perpendiculaire
-        double norm = Math.sqrt(perpVecX * perpVecX + perpVecY * perpVecY);
-        perpVecX /= norm;
-        perpVecY /= norm;
-
-        // Calculer les coordonnées du point imaginaire
-        double imaginaryPointX = midX + perpVecX * norm;
-        double imaginaryPointY = midY + perpVecY * norm;
-
+        
+        //Calcul du point imaginaire, qui est la symétrie du node this par rapport au segment [nodeLeft;nodeRight]
+        double imaginaryPointX = this.getX() + 2*(Math.abs(midX-this.getX()) * (midX < this.getX() ? -1 : 1));
+        double imaginaryPointY = this.getY() + 2*(Math.abs(midY-this.getY()) * (midY < this.getY() ? -1 : 1));
+        
+        //System.out.println("Point imaginaire : " + imaginaryPointX + " ; " + imaginaryPointY);
+        
+        
+        
         // Calculer le vecteur de force pour chaque nœud
         double forceXLeft = (imaginaryPointX - nodeLeft.getX()) * 0.05;
         double forceYLeft = (imaginaryPointY - nodeLeft.getY()) * 0.05;
@@ -143,8 +127,6 @@ public class Node {
         double deltaY = nodeLeft.getY() - nodeRight.getY();
         // Calculer l'angle entre les vecteurs
 
-        double forceX = deltaX * 0.1; // Calculer la force en X
-        double forceY = deltaY * 0.1; // Calculer la force en Y
 
         
      // Calculer les différences en coordonnées X et Y entre nodeLeft et thisNode
@@ -174,30 +156,32 @@ public class Node {
         // Convertir l'angle en degrés
         double angleDegrees = 180-Math.toDegrees(angleRadians);
         
+        //LE PROBLEME EST QUE LA MEME FORCE EST APPLIQUEE AUX DEUX NOEUDS ALORS QU'ILS SONT à UNE DISTANCE DIFFERENTE
+        
         //System.out.println("Objectif: " + this.angleValue + " | Valeur : " + angleDegrees);
         // Appliquer la force aux nœuds
 		double moyenneForceX = (Math.abs(forceXLeft)+Math.abs(forceXRight))/2;
 		double moyenneForceY = (forceYLeft+forceYRight)/2;
+		double magnitudeAngle = angleDegrees/180*3;
         if (this.sensContraction == SensContraction.INTERIEUR)
         {
 	    	if(angleDegrees>=this.angleValue)
 	    	{
-
-		        this.applyForce(moyenneForceX, -moyenneForceY);
-		        this.applyForce(-moyenneForceX, -moyenneForceY);
-		        nodeRight.applyForce(-moyenneForceX, moyenneForceY);
-		        nodeLeft.applyForce(moyenneForceX, moyenneForceY);
+		        this.applyForce(-forceXLeft*magnitudeAngle, -forceYLeft*magnitudeAngle);
+	    		this.applyForce(-forceXRight*magnitudeAngle, -forceYRight*magnitudeAngle);
+		        nodeLeft.applyForce(forceXLeft, forceYLeft);
+		        nodeRight.applyForce(forceXRight, forceYRight );
 		        //this.applyForce(0, -(Math.abs(forceXLeft)+Math.abs(forceXRight)));
 	    	}
-	        //this.applyForce((-(Math.abs(forceXLeft)+Math.abs(forceXRight))/2)*180/angleDegrees/10, (-forceYLeft-forceYRight)*180/angleDegrees/10);
+	        //this.applyForce((-moyenneForceX)*angleDegrees/20, (-forceYLeft-forceYRight)*angleDegrees/20);
         } else {
         	if(angleDegrees<=this.angleValue)
         	{
     	        // Appliquer la force aux nœuds
-		        this.applyForce(-moyenneForceX, moyenneForceY);
-		        this.applyForce(moyenneForceX, moyenneForceY);
-    	        nodeRight.applyForce(moyenneForceX, -moyenneForceY);
-    	        nodeLeft.applyForce(-moyenneForceX, -moyenneForceY);
+		        this.applyForce(forceXLeft*1/magnitudeAngle*0.1, forceYLeft*1/magnitudeAngle*0.1);
+	    		this.applyForce(forceXRight*0.2, forceYRight*0.2);
+		        nodeRight.applyForce(-forceXRight, -forceYRight );
+		        nodeLeft.applyForce(-forceXLeft, -forceYLeft);
     	        //this.applyForce(forceXLeft*2, forceYLeft*2);
     	        //this.applyForce(forceXRight*2, forceYRight*2);
     	        //this.applyForce(forceXLeft+forceXRight, +forceYLeft+forceYRight);
@@ -226,11 +210,11 @@ public class Node {
 		if (this.angleValue!=0)
 	    	this.contractionMeduse();
 		
-		System.out.println(String.format("NODE %03.0f;%03.0f;%03.0f       X: %f", 
+		/*System.out.println(String.format("NODE %03.0f;%03.0f;%03.0f       X: %f", 
                 this.color.getRed(), 
                 this.color.getGreen(), 
                 this.color.getBlue(), 
-                this.getX()));
+                this.getX()));*/
 
     }
 
@@ -249,11 +233,11 @@ public class Node {
         shape.setTranslateY(y);
 	}
 
-    double getX() {
+    public double getX() {
 		return x;
 	}
 
-	double getY() {
+	public double getY() {
 		return y;
 	}
 	
@@ -261,7 +245,7 @@ public class Node {
 		return this.segments.size();
 	}
 	
-	int getId() { 
+	public int getId() { 
 		return this.id;
 	}
 	
