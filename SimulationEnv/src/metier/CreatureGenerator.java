@@ -30,11 +30,11 @@ public class CreatureGenerator {
 					{
 						//int randomX = (int) ((int) (Math.random() * (SimulationCreature.WIDTH - nodes[j-1].getX() + 1)) + nodes[j-1].getX());
 						//int randomY = (int) ((int) (Math.random() * (SimulationCreature.HEIGHT - 0 + 1)) );
-						nodes[j] = new Node(Color.GREEN);
+						nodes[j] = new Node();
 						creature.ajouterSegment(new Segment(nodes[j-1], nodes[j]));
 					}
 					else
-						nodes[j] = new Node(Color.RED);
+						nodes[j] = new Node();
 					
 				}
 				

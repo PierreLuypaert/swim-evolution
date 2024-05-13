@@ -23,14 +23,14 @@ public class Creature implements Cloneable {
         if(SimulationCreature.DEBUG_CREATURES)
         {
     	
-	    	Node nodeA = new Node(Color.RED, 100, 800);
-	    	Node nodeB = new Node(Color.BLUE, 200, 600);
-	    	Node nodeC = new Node(Color.GREEN, 300, 800);
-	    	Node nodeD = new Node(Color.BLUEVIOLET, 200, 400);
+	    	Node nodeA = new Node(100, 800);
+	    	Node nodeB = new Node(200, 600);
+	    	Node nodeC = new Node(300, 800);
+	    	Node nodeD = new Node(200, 400);
 	    	
 	
-	    	Node nodeE = new Node(Color.WHITE, 100, 600);
-	    	Node nodeF = new Node(Color.CHOCOLATE, 300, 600);
+	    	Node nodeE = new Node(100, 600);
+	    	Node nodeF = new Node(300, 600);
 	    	/*Node nodeG = new Node(Color.BLACK, 200, 400);
 	    	Node nodeend = new Node(Color.BEIGE, 200, 900);*/
 	    	

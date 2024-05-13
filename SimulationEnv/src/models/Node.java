@@ -2,6 +2,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import enviro.SimulationCreature;
 import javafx.scene.paint.Color;
@@ -20,29 +21,28 @@ public class Node {
     private List<Muscle> muscles;
     
 
-	public Node(Color color, int x, int y) {
+	public Node(int x, int y) {
 		this.id = Node.ID_NODE++;
-		this.color=color;
+        Random random = new Random();
+		float hue = random.nextFloat(); // Teinte aléatoire entre 0 et 1
+		this.color = Color.CADETBLUE;
 		this.segments = new ArrayList<Segment>();
         this.x = x;
         this.y = y;
         this.muscles = new ArrayList<Muscle>();
         
 		shape = new Circle(SIZE);
-        shape.setFill(color);
+        shape.setFill(this.color);
         shape.setTranslateX(x);
         shape.setTranslateY(y);
 	}
 	
 
 	
-	public Node(Color color) {
-        this(color, (int) Math.round(Math.random() * SimulationCreature.WIDTH), 
-                  (int) Math.round(Math.random() * SimulationCreature.HEIGHT));
-    }
 	public Node() {
-		this(Color.BLUE);
-	}
+        this((int) Math.round(Math.random() * SimulationCreature.WIDTH), 
+             (int) Math.round(Math.random() * SimulationCreature.HEIGHT));
+    }
 	
 	void addSegment(Segment segment) {
 		this.segments.add(segment);
