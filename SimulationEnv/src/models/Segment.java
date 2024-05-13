@@ -15,7 +15,7 @@ public class Segment {
 		this.nodeLeft.addSegment(this);
 		this.nodeRight.addSegment(this);
 		this.line = new Line(nodeLeft.getX(), nodeLeft.getY(), nodeRight.getX(), nodeRight.getY());
-		this.line.setStroke(Color.DARKCYAN);
+		this.line.setStroke(Color.WHITE);
         this.line.setStrokeWidth(1.6);
 
 	}

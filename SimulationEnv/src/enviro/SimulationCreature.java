@@ -1,15 +1,23 @@
 package enviro;
 
 import java.util.List;
-
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.image.Image;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import metier.CreatureGenerator;
 import models.Creature;
@@ -30,11 +38,29 @@ public class SimulationCreature extends Application {
 
     @Override
     public void start(Stage primaryStage) throws CloneNotSupportedException {
-        Group root = new Group();
+        Pane root = new Pane();
+        
+        // Load your image
+        Image backgroundImage = new Image("file:ressources/bg2.png");
+
+     // Create an ImageView for the background image
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setFitWidth(WIDTH);
+        backgroundView.setFitHeight(HEIGHT);
+
+        // Apply ColorAdjust effect to the background image
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(-0.3); // Adjust brightness level here (-1.0 to 1.0)
+        backgroundView.setEffect(colorAdjust);
+
+        // Add the ImageView to the root pane
+        root.getChildren().add(backgroundView);
+
+
+        // Apply the ColorAdjust effect to the root node
+        root.setEffect(colorAdjust);
 
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.WHITE);
-        scene.setFill(Color.LIGHTBLUE); 
-
         
         primaryStage.setTitle("Creature Evolution Simulation");
         primaryStage.setScene(scene);

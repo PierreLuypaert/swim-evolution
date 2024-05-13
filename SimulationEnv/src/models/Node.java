@@ -41,6 +41,8 @@ public class Node {
         
 		shape = new Circle(SIZE);
         shape.setFill(this.color);
+        shape.setStroke(Color.GREY); // Set the border color
+        shape.setStrokeWidth(2); // Set the border width
         shape.setTranslateX(x);
         shape.setTranslateY(y);
 	}
