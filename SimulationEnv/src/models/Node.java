@@ -20,12 +20,20 @@ public class Node {
     private Color color;
     private List<Muscle> muscles;
     
+    
+    // Tableau de couleurs de bleu
+    private static final Color[] BLUE_SHADES = {
+        Color.CADETBLUE,
+        Color.AQUA,
+        Color.BLUE,
+        Color.LIGHTSTEELBLUE
+        // Ajoutez d'autres nuances de bleu selon vos préférences
+    };
 
 	public Node(int x, int y) {
 		this.id = Node.ID_NODE++;
         Random random = new Random();
-		float hue = random.nextFloat(); // Teinte aléatoire entre 0 et 1
-		this.color = Color.CADETBLUE;
+        this.color = BLUE_SHADES[(int) (Math.random() * BLUE_SHADES.length)];
 		this.segments = new ArrayList<Segment>();
         this.x = x;
         this.y = y;

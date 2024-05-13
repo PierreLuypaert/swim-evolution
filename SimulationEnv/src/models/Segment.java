@@ -1,5 +1,6 @@
 package models;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
@@ -14,6 +15,9 @@ public class Segment {
 		this.nodeLeft.addSegment(this);
 		this.nodeRight.addSegment(this);
 		this.line = new Line(nodeLeft.getX(), nodeLeft.getY(), nodeRight.getX(), nodeRight.getY());
+		this.line.setStroke(Color.DARKCYAN);
+        this.line.setStrokeWidth(1.6);
+
 	}
 
     Node getNodeLeft() {
