@@ -18,15 +18,14 @@ import models.Segment;
 
 public class SimulationCreature extends Application {
     public static final int TIME_CLOCK_CYCLE = 60;
-    public static final double CLOCK_INCREMENT = 0.1;
-    public static final boolean DEBUG_CREATURES = true;
+    public static final double CLOCK_INCREMENT = 0.2;
+    public static final boolean DEBUG_CREATURES = false;
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 900;
-    public static final int CREATURE_PER_ROUND = 2;
+    public static final int CREATURE_PER_ROUND = 50;
     public static final int MIN_NODES = 3;
     public static final int MAX_NODES = 6;
     public static final int MAX_SEGMENT = 5;
-    private static final int NUM_CREATURES = 1;
     private List<Creature> creatures;
 
     @Override
@@ -54,11 +53,14 @@ public class SimulationCreature extends Application {
         }*/
         
         
-
-        Creature creatureCopy = creatures.get(0);
-        creatureCopy.ajouterAction();
-        creatureCopy.mutation();
-        root.getChildren().addAll(creatureCopy.getShapes());
+        for (Creature creature : creatures) {
+            creature.ajouterAction();
+            creature.mutation();
+	        
+	    }
+        for(Creature creature: creatures) {
+            root.getChildren().addAll(creature.getShapes());
+        }
 
         
         //root.getChildren().add(new Line(200,0,200,900));     // Start simulation loop

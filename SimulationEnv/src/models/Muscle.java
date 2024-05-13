@@ -141,8 +141,8 @@ public class Muscle {
         {
 	    	if(angleDegrees>=this.angleValue)
 	    	{
-		        this.currentNode.applyForce(-forceXLeft*magnitudeAngle, -forceYLeft*magnitudeAngle);
-	    		this.currentNode.applyForce(-forceXRight*magnitudeAngle, -forceYRight*magnitudeAngle);
+		        this.currentNode.applyForce(-forceXLeft*magnitudeAngle*4, -forceYLeft*magnitudeAngle*4);
+	    		this.currentNode.applyForce(-forceXRight*magnitudeAngle*4, -forceYRight*magnitudeAngle*4);
 		        nodeLeft.applyForce(forceXLeft, forceYLeft);
 		        nodeRight.applyForce(forceXRight, forceYRight );
 		        //this.applyForce(0, -(Math.abs(forceXLeft)+Math.abs(forceXRight)));
@@ -152,8 +152,8 @@ public class Muscle {
         	if(angleDegrees<=this.angleValue)
         	{
     	        // Appliquer la force aux nœuds
-		        this.currentNode.applyForce(forceXLeft*1/magnitudeAngle*0.1, forceYLeft*1/magnitudeAngle*0.1);
-	    		this.currentNode.applyForce(forceXRight*0.2, forceYRight*0.2);
+		        this.currentNode.applyForce(forceXLeft*1/magnitudeAngle*0.1*5, forceYLeft*1/magnitudeAngle*0.1*5);
+	    		this.currentNode.applyForce(forceXRight*0.2*5, forceYRight*0.2*5);
 		        nodeRight.applyForce(-forceXRight, -forceYRight );
 		        nodeLeft.applyForce(-forceXLeft, -forceYLeft);
     	        //this.applyForce(forceXLeft*2, forceYLeft*2);

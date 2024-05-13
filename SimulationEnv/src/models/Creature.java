@@ -26,12 +26,12 @@ public class Creature implements Cloneable {
 	    	Node nodeA = new Node(Color.RED, 100, 800);
 	    	Node nodeB = new Node(Color.BLUE, 200, 600);
 	    	Node nodeC = new Node(Color.GREEN, 300, 800);
-	    	Node nodeD = new Node(Color.BLUEVIOLET, 200, 500);
+	    	Node nodeD = new Node(Color.BLUEVIOLET, 200, 400);
 	    	
 	
-	    	Node nodeE = new Node(Color.WHITE, 200, 900);
-	    	/*Node nodeF = new Node(Color.CHOCOLATE, 300, 700);
-	    	Node nodeG = new Node(Color.BLACK, 200, 400);
+	    	Node nodeE = new Node(Color.WHITE, 100, 600);
+	    	Node nodeF = new Node(Color.CHOCOLATE, 300, 600);
+	    	/*Node nodeG = new Node(Color.BLACK, 200, 400);
 	    	Node nodeend = new Node(Color.BEIGE, 200, 900);*/
 	    	
 	
@@ -39,15 +39,15 @@ public class Creature implements Cloneable {
 	    	Segment seg2 = new Segment(nodeB,nodeC);
 	    	Segment seg3 = new Segment(nodeB,nodeD);
 	    	Segment seg4 = new Segment(nodeD,nodeE);
-	    	/*Segment seg5 = new Segment(nodeD,nodeF);
-	    	//Segment seg6 = new Segment(nodeD,nodeG);
+	    	Segment seg5 = new Segment(nodeD,nodeF);
+	    	/*//Segment seg6 = new Segment(nodeD,nodeG);
 	    	//Segment seg7 = new Segment(nodeB,nodeend);*/
 	
 	    	this.segments.add(seg);
 	    	this.segments.add(seg2);
-	    	//this.segments.add(seg3);
-	    	//this.segments.add(seg4);
-	    	//this.segments.add(seg5);
+	    	this.segments.add(seg3);
+	    	this.segments.add(seg4);
+	    	this.segments.add(seg5);
 	    	//this.segments.add(seg6);
 	    	//this.segments.add(seg7);
         }
@@ -272,9 +272,9 @@ public class Creature implements Cloneable {
     	        // Les nœuds sont trop proches, appliquer une force extérieure
     	        double forceX = deltaX * lengthDiff * 1; // Force extérieure
     	        double forceY = deltaY * lengthDiff *  1; // Force extérieure
-    	        if (seg.getNodeLeft().getNeighboorCount() != 1)
+    	        //if (seg.getNodeLeft().getNeighboorCount() != 1)
     	        	seg.getNodeRight().applyForce(forceX, forceY);
-    	        if (seg.getNodeRight().getNeighboorCount() != 1)
+    	        //if (seg.getNodeRight().getNeighboorCount() != 1)
     	        	seg.getNodeLeft().applyForce(-forceX, -forceY);
 	        	
     	        	
@@ -282,9 +282,9 @@ public class Creature implements Cloneable {
     	        // Les nœuds sont trop éloignés, appliquer une force intérieure
     	        double forceX = deltaX * lengthDiff *  1; // Force intérieure
     	        double forceY = deltaY * lengthDiff *  1; // Force intérieure
-    	        if (seg.getNodeRight().getNeighboorCount() != 1)
+    	        //if (seg.getNodeRight().getNeighboorCount() != 1)
     	        	seg.getNodeLeft().applyForce(-forceX, -forceY);
-    	        if (seg.getNodeLeft().getNeighboorCount() != 1)
+    	        //if (seg.getNodeLeft().getNeighboorCount() != 1)
     	        	seg.getNodeRight().applyForce(forceX, forceY);
     	    }
 
