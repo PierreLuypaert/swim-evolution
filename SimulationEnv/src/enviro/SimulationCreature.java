@@ -30,7 +30,7 @@ public class SimulationCreature extends Application {
     public static final boolean DEBUG_CREATURES = false;
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 900;
-    public static final int CREATURE_PER_ROUND = 50;
+    public static final int CREATURE_PER_ROUND = 8;
     public static final int MIN_NODES = 3;
     public static final int MAX_NODES = 6;
     public static final int MAX_SEGMENT = 5;
@@ -102,7 +102,11 @@ public class SimulationCreature extends Application {
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.X) {
             	for (Creature creature : creatures) {
-                        creature.ajouterAction();
+                        //creature.ajouterAction();
+            		System.out.println(creature.getUsedForce() 
+            				+ " | " + creature.getAvgDistanceTraveled() 
+            				+ " | " + creature.getNodeCount() 
+            				+ " >>>> " + creature.calculateScore());
                     
                 }
             }

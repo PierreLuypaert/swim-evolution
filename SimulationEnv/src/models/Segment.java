@@ -8,8 +8,10 @@ public class Segment {
 	private Node nodeLeft;
 	private Node nodeRight;
 	private Line line;
+	private Creature creature;
 	
-	public Segment(Node nodeLeft, Node nodeRight) {
+	public Segment(Creature creature, Node nodeLeft, Node nodeRight) {
+		this.creature = creature;
 		this.nodeLeft  = nodeLeft;
 		this.nodeRight = nodeRight;
 		this.nodeLeft.addSegment(this);
@@ -89,5 +91,8 @@ public class Segment {
 	    return exactlySame || nodesSwapped || leftNodeSwapped || rightNodeSwapped;
 	}
 
+	Creature getCreature() {
+		return this.creature;
+	}
 
 }

@@ -145,6 +145,8 @@ public class Muscle {
 	    		this.currentNode.applyForce(-forceXRight*magnitudeAngle*4, -forceYRight*magnitudeAngle*4);
 		        nodeLeft.applyForce(forceXLeft, forceYLeft);
 		        nodeRight.applyForce(forceXRight, forceYRight );
+		        currentNode.addForceToCreature(forceXLeft,forceYLeft);
+		        currentNode.addForceToCreature(forceXRight,forceYRight);
 		        //this.applyForce(0, -(Math.abs(forceXLeft)+Math.abs(forceXRight)));
 	    	}
 	        //this.applyForce((-moyenneForceX)*angleDegrees/20, (-forceYLeft-forceYRight)*angleDegrees/20);
@@ -156,6 +158,8 @@ public class Muscle {
 	    		this.currentNode.applyForce(forceXRight*0.2*5, forceYRight*0.2*5);
 		        nodeRight.applyForce(-forceXRight, -forceYRight );
 		        nodeLeft.applyForce(-forceXLeft, -forceYLeft);
+		        currentNode.addForceToCreature(forceXLeft,forceYLeft);
+		        currentNode.addForceToCreature(forceXRight,forceYRight);
     	        //this.applyForce(forceXLeft*2, forceYLeft*2);
     	        //this.applyForce(forceXRight*2, forceYRight*2);
     	        //this.applyForce(forceXLeft+forceXRight, +forceYLeft+forceYRight);

@@ -143,10 +143,9 @@ public class Node {
     }
     
 
-
-
-
-
+    void addForceToCreature(double forceX, double forceY) {
+    	this.segments.get(0).getCreature().addUsedForce(forceX, forceY);
+    }
     
     void update() {
     	for(Muscle muscle : this.muscles)

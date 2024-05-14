@@ -17,9 +17,17 @@ public class Creature implements Cloneable {
     private List<Segment> segments;
     private Set<Node> addedNodes;
 
+    private double usedForce;
+    private double score;
+    private double initialAvgX, initialAvgY;
+    
+    
     public Creature() {
     	this.segments = new ArrayList<Segment>();
         this.addedNodes = new HashSet<>();
+        this.usedForce = 0;
+        this.score = 0;
+        
         if(SimulationCreature.DEBUG_CREATURES)
         {
     	
@@ -35,11 +43,11 @@ public class Creature implements Cloneable {
 	    	Node nodeend = new Node(Color.BEIGE, 200, 900);*/
 	    	
 	
-	    	Segment seg = new Segment(nodeA,nodeB);
-	    	Segment seg2 = new Segment(nodeB,nodeC);
-	    	Segment seg3 = new Segment(nodeB,nodeD);
-	    	Segment seg4 = new Segment(nodeD,nodeE);
-	    	Segment seg5 = new Segment(nodeD,nodeF);
+	    	Segment seg = new Segment(this, nodeA,nodeB);
+	    	Segment seg2 = new Segment(this, nodeB,nodeC);
+	    	Segment seg3 = new Segment(this, nodeB,nodeD);
+	    	Segment seg4 = new Segment(this, nodeD,nodeE);
+	    	Segment seg5 = new Segment(this, nodeD,nodeF);
 	    	/*//Segment seg6 = new Segment(nodeD,nodeG);
 	    	//Segment seg7 = new Segment(nodeB,nodeend);*/
 	
@@ -51,6 +59,7 @@ public class Creature implements Cloneable {
 	    	//this.segments.add(seg6);
 	    	//this.segments.add(seg7);
         }
+
     }
     
     public Creature(Creature other) {
@@ -163,7 +172,7 @@ public class Creature implements Cloneable {
             } else if (probability >= 55 && probability < 70) {
                 // AJOUT D'UN MEMBRE
                 Node newNode = new Node();
-                this.segments.add(new Segment(newNode, randomNode));
+                this.segments.add(new Segment(this, newNode, randomNode));
                 performed = true;
                 System.out.println("Ajout d'un membre effectué.");
             } else {
@@ -227,6 +236,10 @@ public class Creature implements Cloneable {
                 addedNodes.add(nodeRight);
             }
         }
+                
+        this.initialAvgX = this.addedNodes.stream().mapToDouble(Node::getX).average().orElse(0);
+        this.initialAvgY = this.addedNodes.stream().mapToDouble(Node::getY).average().orElse(0);
+        
         return shapes;
     }
 
@@ -254,9 +267,6 @@ public class Creature implements Cloneable {
 
     	for (Segment seg : this.segments) {
     		
-    		//un noeud ne se fait pas attirer par son voisin si ce voisin n'a pas d'autre voisin
-    	    // Longueur souhaitée du segment
-
     	    // Calculer la longueur actuelle du segment
     	    double currentLength = seg.getLength();
 
@@ -294,6 +304,41 @@ public class Creature implements Cloneable {
     	    seg.update();
     	}
     }
+    
+    public void addUsedForce(double forceX, double forceY) {
+    	this.usedForce += Math.abs(Math.sqrt(Math.pow(forceX,2) + Math.pow(forceY,2)));
+    }
+    
+    public double getUsedForce() {
+    	return this.usedForce;
+    }
+    
+    public double getAvgDistanceTraveled() {
+        double currentAvgX = this.addedNodes.stream().mapToDouble(Node::getX).average().orElse(0);
+        double currentAvgY = this.addedNodes.stream().mapToDouble(Node::getY).average().orElse(0);
+        
+        // Calcul de la norme du vecteur de déplacement
+        double deltaX = currentAvgX - this.initialAvgX;
+        double deltaY = currentAvgY - this.initialAvgY;
+        double displacementNorm = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        
+        return displacementNorm;
+    }
+    
+    public int getNodeCount() {
+    	return this.addedNodes.size();
+    }
+    
+    public double calculateScore() {
+        double inverseForce = 1 / (this.getUsedForce() + 1); // Utilisation d'une formule inverse pour minimiser la force utilisée
+        double distance = this.getAvgDistanceTraveled();
+        double inverseNodeCount = 1 / (this.getNodeCount() + 1); // Utilisation d'une formule inverse pour minimiser le nombre de nœuds
+        
+        // Le score est basé sur l'inverse de la force utilisée, la distance parcourue et l'inverse du nombre de nœuds
+        double score = inverseForce + distance + inverseNodeCount;
+        return score;
+    }
+
     
     /*private boolean isSegmentAlreadyExisting(Segment segment) {
     	for(Segment seg : this.segments) 
