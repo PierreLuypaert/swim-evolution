@@ -7,7 +7,7 @@ import enviro.SimulationCreature;
 import utils.Utils;
 
 
-public class InternalClock {
+public class InternalClock implements Cloneable {
     private double currentTime = 0;
     private int nextIndexExecution=0;
 	private List<ActionType> actions;
@@ -17,6 +17,7 @@ public class InternalClock {
 		this.actions = new ArrayList<ActionType>();
 		this.muscle = muscle;
 	}
+	
 	
 	void execute() {
 		updateActions();
@@ -43,5 +44,7 @@ public class InternalClock {
 		//if ( this.muscle.getActionsCount() != this.actions.size())
 		this.actions = this.muscle.getActions();
 	}
+	
+
 	
 }

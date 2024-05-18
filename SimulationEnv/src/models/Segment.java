@@ -4,13 +4,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
-public class Segment {
+public class Segment implements Cloneable{
 	private Node nodeLeft;
 	private Node nodeRight;
 	private Line line;
 	private Creature creature;
 	
-	public Segment(Creature creature, Node nodeLeft, Node nodeRight) {
+	public Segment(Creature creature, Node nodeLeft, Node nodeRight, Segment other) {
 		this.creature = creature;
 		this.nodeLeft  = nodeLeft;
 		this.nodeRight = nodeRight;
@@ -19,8 +19,34 @@ public class Segment {
 		this.line = new Line(nodeLeft.getX(), nodeLeft.getY(), nodeRight.getX(), nodeRight.getY());
 		this.line.setStroke(Color.WHITE);
         this.line.setStrokeWidth(1.6);
+        if(other!=null) {
+            this.nodeLeft.restoreMuscle(other.getNodeLeft());
+            this.nodeRight.restoreMuscle(other.getNodeRight());
+        }
 
 	}
+	
+	public Segment(Creature creature, Node nodeLeft, Node nodeRight) {
+		this(creature, nodeLeft, nodeRight, null);
+
+	}
+	
+    // Copy constructor
+    /*public Segment(Segment other) {
+    	//NON, LE NOEUD A PEUT ETRE DEJA ETE CREE
+        this.nodeLeft = new Node(other.nodeLeft); // Assuming Node class has a copy constructor
+        this.nodeRight = new Node(other.nodeRight); // Assuming Node class has a copy constructor
+		this.nodeLeft.addSegment(this);
+		this.nodeRight.addSegment(this);
+		this.nodeLeft.restoreMuscle(other.nodeLeft);
+		this.nodeRight.restoreMuscle(other.nodeRight);
+        // Note: You might need to update the Node constructor if it has other dependencies
+        this.line = new Line(other.line.getStartX(), other.line.getStartY(), other.line.getEndX(), other.line.getEndY());
+        this.line.setStroke(other.line.getStroke());
+        this.line.setStrokeWidth(other.line.getStrokeWidth());
+        // Assuming Creature is immutable or does not need to be cloned
+        this.creature = other.creature;
+    }*/
 
     Node getNodeLeft() {
         /*if (nodeLeft.getX() > nodeRight.getX()) {

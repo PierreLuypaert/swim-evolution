@@ -7,7 +7,7 @@ import utils.SensContraction;
 
 
 
-public class Muscle {
+public class Muscle implements Cloneable  {
 	private Node currentNode;
 	private Node nodeLeft;
 	private Node nodeRight;
@@ -28,6 +28,17 @@ public class Muscle {
 		else
 			this.actions = new ArrayList<ActionType>();
 	}
+	
+    // Copy constructor
+    public Muscle(Muscle other, Node currentNode, Node nodeLeft, Node nodeRight) {
+        this.currentNode = currentNode;
+        this.nodeLeft = nodeLeft;
+        this.nodeRight = nodeRight;
+        this.sensContraction = other.sensContraction;
+		this.angleValue = other.angleValue;
+		this.clock = new InternalClock(this);
+		this.actions = new ArrayList<ActionType>(other.actions);
+    }
 	
 	int getActionsCount() {
 		return this.actions.size();
@@ -136,7 +147,7 @@ public class Muscle {
         // Appliquer la force aux nœuds
 		double moyenneForceX = (Math.abs(forceXLeft)+Math.abs(forceXRight))/2;
 		double moyenneForceY = (forceYLeft+forceYRight)/2;
-		double magnitudeAngle = angleDegrees/180*3;
+		double magnitudeAngle = (Math.abs(angleDegrees-this.angleValue))/180*3;
         if (this.sensContraction == SensContraction.INTERIEUR)
         {
 	    	if(angleDegrees>=this.angleValue)
@@ -166,5 +177,12 @@ public class Muscle {
         	}
         }
     	
+    }
+    
+    public Node getNodeLeft() {
+    	return this.nodeLeft;
+    }
+    public Node getNodeRight() {
+    	return this.nodeRight;
     }
 }

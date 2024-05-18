@@ -8,17 +8,19 @@ import enviro.SimulationCreature;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class Node {
+public class Node implements Cloneable {
 	public static int ID_NODE = 0;
 	private int id;
 	private List<Segment> segments;    
     private static final double SIZE = 10.0;
     private Circle shape;
     private double x, y;
+    private double xStart, yStart;
     private double forceX;
     private double forceY;
     private Color color;
     private List<Muscle> muscles;
+    private boolean isCopy = false;
     
     
     // Tableau de couleurs de bleu
@@ -32,11 +34,12 @@ public class Node {
 
 	public Node(int x, int y) {
 		this.id = Node.ID_NODE++;
-        Random random = new Random();
         this.color = BLUE_SHADES[(int) (Math.random() * BLUE_SHADES.length)];
 		this.segments = new ArrayList<Segment>();
         this.x = x;
         this.y = y;
+        this.xStart = x;
+        this.yStart = y;
         this.muscles = new ArrayList<Muscle>();
         
 		shape = new Circle(SIZE);
@@ -45,14 +48,85 @@ public class Node {
         shape.setStrokeWidth(2); // Set the border width
         shape.setTranslateX(x);
         shape.setTranslateY(y);
+        this.isCopy = false;
 	}
 	
 
+	// Copy constructor
+    public Node(Node other) {
+        this.id = other.id;
+        // Assuming segments are mutable and need to be deep copied
+        this.segments = new ArrayList<>();
+        this.shape = new Circle(other.shape.getCenterX(), other.shape.getCenterY(), other.shape.getRadius());
+        this.shape.setFill(other.shape.getFill());
+        this.shape.setStroke(other.shape.getStroke());
+        this.shape.setStrokeWidth(other.shape.getStrokeWidth());
+        this.x = other.x;
+        this.y = other.y;
+        this.xStart = other.xStart;
+        this.yStart = other.yStart;
+        this.forceX = 0;
+        this.forceY = 0;
+        this.color = other.color;
+        this.muscles = new ArrayList<>();
+        // Assuming muscles are mutable and need to be deep copied
+        this.isCopy = true;
+
+    }
 	
 	public Node() {
         this((int) Math.round(Math.random() * SimulationCreature.WIDTH), 
              (int) Math.round(Math.random() * SimulationCreature.HEIGHT));
     }
+	
+	void restoreMuscle(Node other) {
+        Node nodeLeft; 
+        Node nodeRight;
+        if(this.segments.size() <= 1) return;
+        for (Muscle muscle : other.muscles) {
+            Segment segmentNodeLeft = this.segments.stream()
+                    .filter(seg -> seg.getNodeLeft().getId() == muscle.getNodeLeft().getId())
+                    .findFirst()
+                    .orElse(null);
+            
+            if(segmentNodeLeft==null)
+            {
+                segmentNodeLeft = this.segments.stream()
+                        .filter(seg -> seg.getNodeRight().getId() == muscle.getNodeLeft().getId())
+                        .findFirst()
+                        .orElse(null);
+                nodeLeft = segmentNodeLeft.getNodeRight();
+                
+            } else {
+                nodeLeft = segmentNodeLeft.getNodeLeft();
+            }
+            
+
+            Segment segmentNodeRight = this.segments.stream()
+                    .filter(seg -> seg.getNodeRight().getId() == muscle.getNodeRight().getId())
+                    .findFirst()
+                    .orElse(null);
+            
+            if(segmentNodeRight==null)
+            {
+                segmentNodeRight = this.segments.stream()
+                        .filter(seg -> seg.getNodeLeft().getId() == muscle.getNodeRight().getId())
+                        .findFirst()
+                        .orElse(null);
+                nodeRight = segmentNodeRight.getNodeLeft();
+                
+            } else {
+                nodeRight = segmentNodeRight.getNodeRight();
+            }
+                
+            this.muscles.add(new Muscle(muscle, this, nodeLeft, nodeRight)); // Assuming Muscle class has a copy constructor
+        }
+	}
+	
+	void resetPosition() {
+		this.x = this.xStart;
+		this.y = this.yStart;
+	}
 	
 	void addSegment(Segment segment) {
 		this.segments.add(segment);
@@ -199,7 +273,6 @@ public class Node {
 	public int getMuscleCount() {
 		return this.muscles.size();
 	}
-	
 	public boolean deleteRandomMuscle() {
 		if(this.muscles.size() == 0) return false;
 		int muscleToRemoveIndex = (int) (Math.random() * muscles.size());
@@ -207,6 +280,16 @@ public class Node {
         this.muscles.remove(muscleToRemoveIndex); // Supprime le muscle à l'index aléatoire
         return true; // Indique que la suppression a réussi
 	}
+	
+	public void setColor(Color color) {
+		this.shape.setFill(color);
+	}
+	
+    // Override clone method to make a deep copy
+    @Override
+    public Node clone() {
+        return new Node(this);
+    }
 	
 	
 	

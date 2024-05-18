@@ -17,8 +17,8 @@ public class CreatureGenerator {
 		this.creatures = new ArrayList<Creature>();
 	}
 	
-	public List<Creature> generateCreatures() {
-		for(int i=0; i<SimulationCreature.CREATURE_PER_ROUND/2;i++)
+	public List<Creature> generateCreatures(int numberCreature) {
+		for(int i=0; i<numberCreature;i++)
 		{
 			Creature creature = new Creature();
 			if( !SimulationCreature.DEBUG_CREATURES)

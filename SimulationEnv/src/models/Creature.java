@@ -20,6 +20,7 @@ public class Creature implements Cloneable {
     private double usedForce;
     private double score;
     private double initialAvgX, initialAvgY;
+    private boolean isMuted = false;
     
     
     public Creature() {
@@ -62,15 +63,49 @@ public class Creature implements Cloneable {
 
     }
     
+ // Copy constructor
     public Creature(Creature other) {
-    	this.segments = other.segments;
+        this.segments = new ArrayList<>();
         this.addedNodes = new HashSet<>();
+        this.score = 0;
+        this.usedForce = 0;
+        HashSet<Node> newNodes = new HashSet<Node>();
+        for (Segment segment : other.segments) {
+        	//non, ne faire des new nodes que des nodes non créés
+        	Node oldNodeLeft = segment.getNodeLeft();
+        	Node oldNodeRight = segment.getNodeRight();
+        	Node nodeLeft=null;
+        	Node nodeRight=null;
+        	if (!addedNodes.contains(oldNodeLeft)) {
+                addedNodes.add(oldNodeLeft);
+                nodeLeft=new Node(oldNodeLeft);
+                newNodes.add(nodeLeft);
+                
+            } else {
+            	for (Node newNode : newNodes) {
+                    if (newNode.getId() == oldNodeLeft.getId()) {
+                        nodeLeft = newNode;
+                        break;
+                    }
+                }
+            }
+
+            // Vérifier si le nœud droit a déjà été ajouté
+            if (!addedNodes.contains(oldNodeRight)) {
+                addedNodes.add(oldNodeRight);
+                nodeRight=new Node(oldNodeRight);
+                newNodes.add(nodeRight);
+            } else {
+            	for (Node newNode : newNodes) {
+                    if (newNode.getId() == oldNodeRight.getId()) {
+                    	nodeRight = newNode;
+                        break;
+                    }
+                }
+            }
+            this.segments.add(new Segment(this, nodeLeft, nodeRight, segment)); // Assuming Segment class has a copy constructor
+        }
     }
-    
-    public Object clone() throws CloneNotSupportedException 
-    { 
-        return super.clone(); 
-    } 
     
     public boolean ajouterSegment(Segment segment) {
     	if(!this.segments.contains(segment))
@@ -109,17 +144,23 @@ public class Creature implements Cloneable {
         }
     }
     
-    public void mutation() {
+    public void mutation(int forcedProba) {
         // LES MUTATIONS DOIVENT SE FAIRE SUR DES OBJETS COPIES AVANT LE LANCEMENT DU JEU
         // mutations possibles :
         // changement de la position d'un noeud
         // changement de la vitesse d'horloge
         // ajout ou suppression d'un ou plusieurs membres, mais plus rare
         // ajout d'un muscle
+    	this.isMuted = true;
+    	this.addedNodes = new HashSet<>();
 
         boolean performed = false;
         while (!performed) {
-            int probability = (int) (Math.random() * (100 - 1));
+            int probability;
+            if(forcedProba==-1)
+            	probability = (int) (Math.random() * (100 - 1));
+            else
+            	probability = forcedProba;
             if(addedNodes==null || addedNodes.isEmpty())
             {
             	for (Segment seg : this.segments) {
@@ -138,7 +179,7 @@ public class Creature implements Cloneable {
                 }
             }
             int indexRandom = (int) (Math.random() * addedNodes.size()); // Génère un index aléatoire
-            Node[] nodesArray = addedNodes.toArray(new Node[0]); // Convertit HashSet en tableau
+            Node[] nodesArray = this.addedNodes.toArray(new Node[0]); // Convertit HashSet en tableau
             Node randomNode = nodesArray[indexRandom];
             if (probability >= 0 && probability < 25) {
                 // CHANGEMENT DE POSITION D'UN NOEUD;
@@ -172,7 +213,8 @@ public class Creature implements Cloneable {
             } else if (probability >= 55 && probability < 70) {
                 // AJOUT D'UN MEMBRE
                 Node newNode = new Node();
-                this.segments.add(new Segment(this, newNode, randomNode));
+                this.segments.add(new Segment(this, randomNode, newNode));
+                this.addedNodes.add(newNode);
                 performed = true;
                 System.out.println("Ajout d'un membre effectué.");
             } else {
@@ -219,6 +261,7 @@ public class Creature implements Cloneable {
     public List<Shape> getShapes() {
         List<Shape> shapes = new ArrayList<>();
         this.addedNodes = new HashSet<>();
+        //probleme ici
         for (Segment seg : this.segments) {
             Node nodeLeft = seg.getNodeLeft();
             Node nodeRight = seg.getNodeRight();
@@ -330,15 +373,33 @@ public class Creature implements Cloneable {
     }
     
     public double calculateScore() {
-        double inverseForce = 1 / (this.getUsedForce() + 1); // Utilisation d'une formule inverse pour minimiser la force utilisée
-        double distance = this.getAvgDistanceTraveled();
+        double inverseForce     = 1 / (this.getUsedForce() + 1); // Utilisation d'une formule inverse pour minimiser la force utilisée
+        double distance         = this.getAvgDistanceTraveled();
         double inverseNodeCount = 1 / (this.getNodeCount() + 1); // Utilisation d'une formule inverse pour minimiser le nombre de nœuds
         
         // Le score est basé sur l'inverse de la force utilisée, la distance parcourue et l'inverse du nombre de nœuds
-        double score = inverseForce + distance + inverseNodeCount;
+        this.score = inverseForce + distance + inverseNodeCount;
         return score;
     }
-
+    
+    public void resetPosition() {
+    	for(Node node : this.addedNodes)
+    		node.resetPosition();
+    }
+    
+    public void setColor(Color color) {
+    	for(Segment seg: this.segments)
+    	{
+    		seg.getNodeLeft().setColor(color);
+    		seg.getNodeRight().setColor(color);
+    	}
+    }
+    
+    // Override clone method to make a deep copy
+    @Override
+    public Creature clone() {
+        return new Creature(this);
+    }
     
     /*private boolean isSegmentAlreadyExisting(Segment segment) {
     	for(Segment seg : this.segments) 
